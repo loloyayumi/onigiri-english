@@ -489,6 +489,8 @@ function showTurn() {
   document.getElementById('submitBtn').classList.remove('show');
   document.getElementById('transcriptBox').classList.remove('show');
   document.getElementById('transcriptBox').textContent = '';
+  document.querySelector('.mic-area').style.display = 'block';
+  document.querySelector('.action-btns').style.display = 'flex';
   transcript = '';
 
   document.getElementById('pracTitle').textContent = `ターン ${currentTurnIdx + 1} / ${currentScenario.turns.length}`;
@@ -609,12 +611,24 @@ function startPronun() {
   const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
   pronunRec = new SR();
   pronunRec.lang = 'en-US';
-  pronunRec.continuous = false;
-  pronunRec.interimResults = false;
+  pronunRec.continuous = true;
+  pronunRec.interimResults = true;
+  let pronunFinal = '';
   pronunRec.onresult = (e) => {
-    const r = document.getElementById('pronunResult');
-    r.textContent = '🎤 ' + e.results[0][0].transcript;
-    r.style.display = 'block';
+    let interim = '';
+    for (let i = e.resultIndex; i < e.results.length; i++) {
+      if (e.results[i].isFinal) {
+        pronunFinal += e.results[i][0].transcript + ' ';
+      } else {
+        interim += e.results[i][0].transcript;
+      }
+    }
+    const shown = (pronunFinal + interim).trim();
+    if (shown) {
+      const r = document.getElementById('pronunResult');
+      r.textContent = '🎤 ' + shown;
+      r.style.display = 'block';
+    }
   };
   pronunRec.onerror = () => {
     const r = document.getElementById('pronunResult');
@@ -624,6 +638,7 @@ function startPronun() {
   };
   pronunRec.onend = () => stopPronun();
   pronunRec.start();
+  setTimeout(() => { if (pronunActive) stopPronun(); }, 10000);
 }
 
 function stopPronun() {
@@ -730,6 +745,10 @@ async function submitAnswer() {
     const isLast = currentTurnIdx >= currentScenario.turns.length - 1;
     document.getElementById('nextPracBtn').textContent = isLast ? '練習を終わる' : '次のやりとりへ →';
     document.getElementById('nextPracBtn').classList.add('show');
+    document.querySelector('.mic-area').style.display = 'none';
+    document.querySelector('.action-btns').style.display = 'none';
+    document.querySelector('.mic-area').style.display = 'none';
+    document.querySelector('.action-btns').style.display = 'none';
 
   } catch(e) {
     document.getElementById('fbLoading').textContent = 'エラーが発生しました。';
