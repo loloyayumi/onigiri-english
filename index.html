@@ -263,6 +263,8 @@
     <div id="pracContent" style="display:none">
       <div class="chat-area" id="chatArea"></div>
 
+      <div class="transcript-box" id="transcriptBox"></div>
+
       <div class="feedback-card" id="feedbackCard">
         <div class="fb-score">
           <div class="fb-score-num" id="fbScoreNum">85</div>
@@ -288,7 +290,6 @@
       </div>
 
       <div class="mic-area">
-        <div class="transcript-box" id="transcriptBox" style="display:none;margin-bottom:10px;"></div>
         <button class="mic-btn" id="micBtn" onclick="toggleMic()">
           <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
             <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/>
@@ -456,7 +457,7 @@ function showTurn() {
   // Show customer bubble
   const bubble = document.createElement('div');
   bubble.className = 'bubble customer';
-  bubble.innerHTML = `<div class="role">👤 お客様 <button onclick="speakText('${turn.customer_en.replace(/'/g, String.fromCharCode(39))}')" style="background:none;border:none;cursor:pointer;font-size:18px;vertical-align:middle;padding:0 4px;" title="音声を聞く">🔊</button></div><div class="en">${turn.customer_en}</div><div class="ja">${turn.customer_ja}</div>`;
+  bubble.innerHTML = `<div class="role">👤 お客様</div><div class="en">${turn.customer_en}</div><div class="ja">${turn.customer_ja}</div>`;
   chatArea.appendChild(bubble);
 
   // Hint
@@ -476,10 +477,6 @@ function showTurn() {
   document.getElementById('savePhraseBtn').classList.remove('saved');
   document.getElementById('savePhraseBtn').textContent = '＋ 復習リストに保存';
   document.getElementById('intentBox').classList.remove('show');
-  document.querySelector('.mic-area').style.display = 'block';
-  document.querySelector('.action-btns').style.display = 'flex';
-  document.getElementById('micBtn').className = 'mic-btn';
-  document.getElementById('micLabel').textContent = 'タップして話す';
   transcript = '';
 
   document.getElementById('pracTitle').textContent = `ターン ${currentTurnIdx + 1} / ${currentScenario.turns.length}`;
@@ -489,8 +486,8 @@ function showTurn() {
 }
 
 function toggleMic() {
-  const btn = document.getElementById('micBtn');
-  if (btn.classList.contains('disabled')) return;
+  if (document.getElementById('micBtn').classList.contains('disabled')) return;
+
   if (!isRecording) {
     startRecording();
   } else {
@@ -506,7 +503,7 @@ function startRecording() {
   const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
   recognition = new SpeechRecognition();
   recognition.lang = 'en-US';
-  recognition.continuous = true;
+  recognition.continuous = false;
   recognition.interimResults = true;
 
   recognition.onstart = () => {
@@ -546,30 +543,17 @@ function startRecording() {
 }
 
 function stopRecording() {
+  if (recognition) recognition.stop();
   isRecording = false;
-  if (recognition) {
-    try { recognition.abort(); } catch(e) {}
-    recognition = null;
-  }
-  const btn = document.getElementById('micBtn');
-  btn.className = 'mic-btn';
-  document.getElementById('micLabel').textContent = transcript ? '録音完了 → 採点するを押してください' : 'タップして話す';
 }
 
 
-function speakText(text) {
-  if (!window.speechSynthesis) { alert('このブラウザは音声読み上げに対応していません'); return; }
+function speakText(text, lang='en-US') {
+  if (!window.speechSynthesis) return;
   window.speechSynthesis.cancel();
   const utt = new SpeechSynthesisUtterance(text);
-  utt.lang = 'en-US';
-  utt.rate = 0.85;
-  utt.pitch = 1.0;
-  const voices = window.speechSynthesis.getVoices();
-  const preferred = ['Samantha','Alex','Karen','Daniel','Moira'];
-  for (const name of preferred) {
-    const v = voices.find(v => v.name.includes(name));
-    if (v) { utt.voice = v; break; }
-  }
+  utt.lang = lang;
+  utt.rate = 0.9;
   window.speechSynthesis.speak(utt);
 }
 
