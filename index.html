@@ -457,7 +457,7 @@ function showTurn() {
   // Show customer bubble
   const bubble = document.createElement('div');
   bubble.className = 'bubble customer';
-  bubble.innerHTML = `<div class="role">👤 お客様</div><div class="en">${turn.customer_en}</div><div class="ja">${turn.customer_ja}</div>`;
+  bubble.innerHTML = `<div class="role">👤 お客様 <button onclick="speakText('${turn.customer_en.replace(/'/g, String.fromCharCode(39))}')" style="background:none;border:none;cursor:pointer;font-size:18px;vertical-align:middle;padding:0 4px;" title="音声を聞く">🔊</button></div><div class="en">${turn.customer_en}</div><div class="ja">${turn.customer_ja}</div>`;
   chatArea.appendChild(bubble);
 
   // Hint
@@ -477,6 +477,10 @@ function showTurn() {
   document.getElementById('savePhraseBtn').classList.remove('saved');
   document.getElementById('savePhraseBtn').textContent = '＋ 復習リストに保存';
   document.getElementById('intentBox').classList.remove('show');
+  document.querySelector('.mic-area').style.display = 'block';
+  document.querySelector('.action-btns').style.display = 'flex';
+  document.getElementById('micBtn').className = 'mic-btn';
+  document.getElementById('micLabel').textContent = 'タップして話す';
   transcript = '';
 
   document.getElementById('pracTitle').textContent = `ターン ${currentTurnIdx + 1} / ${currentScenario.turns.length}`;
@@ -503,7 +507,7 @@ function startRecording() {
   const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
   recognition = new SpeechRecognition();
   recognition.lang = 'en-US';
-  recognition.continuous = false;
+  recognition.continuous = true;
   recognition.interimResults = true;
 
   recognition.onstart = () => {
