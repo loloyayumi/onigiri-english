@@ -611,7 +611,7 @@ function startPronun() {
   const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
   pronunRec = new SR();
   pronunRec.lang = 'en-US';
-  pronunRec.continuous = true;
+  pronunRec.continuous = false;
   pronunRec.interimResults = true;
   let pronunFinal = '';
   pronunRec.onresult = (e) => {
@@ -636,9 +636,14 @@ function startPronun() {
     r.style.display = 'block';
     stopPronun();
   };
-  pronunRec.onend = () => stopPronun();
+  pronunRec.onend = () => {
+    if (pronunActive) {
+      // Safari stops automatically - restart
+      try { pronunRec.start(); } catch(e) { stopPronun(); }
+    }
+  };
   pronunRec.start();
-  setTimeout(() => { if (pronunActive) stopPronun(); }, 10000);
+  setTimeout(() => { if (pronunActive) stopPronun(); }, 20000);
 }
 
 function stopPronun() {
