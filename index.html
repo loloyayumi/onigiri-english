@@ -484,6 +484,11 @@ function showTurn() {
   document.getElementById('intentBox').classList.remove('show');
   document.getElementById('pronunResult').style.display='none';
   stopPronun();
+  document.getElementById('micBtn').className = 'mic-btn';
+  document.getElementById('micLabel').textContent = 'タップして話す';
+  document.getElementById('submitBtn').classList.remove('show');
+  document.getElementById('transcriptBox').classList.remove('show');
+  document.getElementById('transcriptBox').textContent = '';
   transcript = '';
 
   document.getElementById('pracTitle').textContent = `ターン ${currentTurnIdx + 1} / ${currentScenario.turns.length}`;
@@ -555,13 +560,23 @@ function stopRecording() {
 }
 
 
-function speakText(text, lang='en-US') {
+function speakText(text) {
   if (!window.speechSynthesis) return;
   window.speechSynthesis.cancel();
-  const utt = new SpeechSynthesisUtterance(text);
-  utt.lang = lang;
-  utt.rate = 0.9;
-  window.speechSynthesis.speak(utt);
+  const doSpeak = () => {
+    const utt = new SpeechSynthesisUtterance(text);
+    utt.lang = 'en-US';
+    utt.rate = 0.85;
+    const voices = window.speechSynthesis.getVoices();
+    const pick = ['Samantha','Alex','Karen','Daniel','Moira'];
+    for (const n of pick) {
+      const v = voices.find(v => v.name.includes(n));
+      if (v) { utt.voice = v; break; }
+    }
+    window.speechSynthesis.speak(utt);
+  };
+  if (window.speechSynthesis.getVoices().length > 0) doSpeak();
+  else { window.speechSynthesis.onvoiceschanged = doSpeak; }
 }
 
 function speakPhrase() {
@@ -650,7 +665,9 @@ async function submitAnswer() {
   "score": 0〜100の整数,
   "comment_ja": "日本語でのフィードバック（良かった点・改善点、50字程度）",
   "recommended_phrase_en": "この場面で使えるおすすめの英語フレーズ（1文）",
-  "recommended_phrase_ja": "おすすめフレーズの日本語訳"
+  "recommended_phrase_ja": "おすすめフレーズの日本語訳",
+  "intent_en": "実際の返答から読み取れるあなたの意図を正しい英語で表現（1文。完璧な場合は空文字）",
+  "intent_ja": "intent_enの日本語訳（intent_enが空の場合は空文字）"
 }`;
 
   try {
