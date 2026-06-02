@@ -263,8 +263,6 @@
     <div id="pracContent" style="display:none">
       <div class="chat-area" id="chatArea"></div>
 
-      <div class="transcript-box" id="transcriptBox"></div>
-
       <div class="feedback-card" id="feedbackCard">
         <div class="fb-score">
           <div class="fb-score-num" id="fbScoreNum">85</div>
@@ -290,6 +288,7 @@
       </div>
 
       <div class="mic-area">
+        <div class="transcript-box" id="transcriptBox" style="display:none;margin-bottom:10px;"></div>
         <button class="mic-btn" id="micBtn" onclick="toggleMic()">
           <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
             <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/>
@@ -490,8 +489,8 @@ function showTurn() {
 }
 
 function toggleMic() {
-  if (document.getElementById('micBtn').classList.contains('disabled')) return;
-
+  const btn = document.getElementById('micBtn');
+  if (btn.classList.contains('disabled')) return;
   if (!isRecording) {
     startRecording();
   } else {
@@ -547,37 +546,31 @@ function startRecording() {
 }
 
 function stopRecording() {
-  if (recognition) recognition.stop();
   isRecording = false;
-}
-
-
-function getBestVoice() {
-  const voices = window.speechSynthesis.getVoices();
-  const preferred = ['Samantha', 'Alex', 'Karen', 'Daniel'];
-  for (const name of preferred) {
-    const v = voices.find(v => v.name.includes(name) && v.lang.startsWith('en'));
-    if (v) return v;
+  if (recognition) {
+    try { recognition.abort(); } catch(e) {}
+    recognition = null;
   }
-  return voices.find(v => v.lang === 'en-US') || voices.find(v => v.lang.startsWith('en')) || null;
+  const btn = document.getElementById('micBtn');
+  btn.className = 'mic-btn';
+  document.getElementById('micLabel').textContent = transcript ? '録音完了 → 採点するを押してください' : 'タップして話す';
 }
 
-function speakText(text, lang='en-US') {
-  if (!window.speechSynthesis) return;
+
+function speakText(text) {
+  if (!window.speechSynthesis) { alert('このブラウザは音声読み上げに対応していません'); return; }
   window.speechSynthesis.cancel();
-  const doSpeak = () => {
-    const utt = new SpeechSynthesisUtterance(text);
-    utt.lang = lang;
-    utt.rate = 0.85;
-    const voice = getBestVoice();
-    if (voice) utt.voice = voice;
-    window.speechSynthesis.speak(utt);
-  };
-  if (window.speechSynthesis.getVoices().length > 0) {
-    setTimeout(doSpeak, 50);
-  } else {
-    window.speechSynthesis.onvoiceschanged = () => setTimeout(doSpeak, 50);
+  const utt = new SpeechSynthesisUtterance(text);
+  utt.lang = 'en-US';
+  utt.rate = 0.85;
+  utt.pitch = 1.0;
+  const voices = window.speechSynthesis.getVoices();
+  const preferred = ['Samantha','Alex','Karen','Daniel','Moira'];
+  for (const name of preferred) {
+    const v = voices.find(v => v.name.includes(name));
+    if (v) { utt.voice = v; break; }
   }
+  window.speechSynthesis.speak(utt);
 }
 
 function speakPhrase() {
