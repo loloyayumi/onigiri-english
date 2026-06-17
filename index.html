@@ -339,7 +339,7 @@
 </div>
 
 
-<!-- フレーズ集 -->
+<!-- 現場フレーズ集 -->
 <div id="phrasebookScreen">
   <div class="pb-header">
     <div class="back-btn" onclick="goHome()">←</div>
@@ -366,50 +366,60 @@ let stats = { sessions: 0, scores: [], phrases: [] };
 
 
 const PHRASEBOOK = [
-  { cat:'\u6ce8\u6587\u3092\u53d7\u3051\u308b', icon:'\U0001F4DD', bg:'#EAF5EE', items:[
-    { ja:'\u9c2f\u7bc0\u629c\u304d\u306e\u3054\u6ce8\u6587\u3082\u627f\u308a\u307e\u3059', en:'We also accept orders without bonito flakes.' },
-    { ja:'\u3069\u3093\u306a\u5473\u304c\u304a\u597d\u307f\u3067\u3059\u304b\uff1f', en:'What kind of flavors do you like?' },
-    { ja:'\u308f\u3055\u3073\u629c\u304d\u3082\u3067\u304d\u307e\u3059\u3088', en:'We can make it without wasabi.' },
-    { ja:'\u304a\u3059\u3059\u3081\u306f\u3053\u3061\u3089\u3067\u3059', en:"Here's what we recommend." },
-    { ja:'\u4e00\u756a\u4eba\u6c17\u306f\u3053\u3061\u3089\u3067\u3059', en:'The most popular one is this one.' },
-    { ja:'\u3042\u3061\u3089\u306e\u6a21\u578b\u304c\u30d3\u30c3\u30b0\u30b5\u30a4\u30ba\u306e\u898b\u672c\u3067\u3059', en:'That model over there is a big size sample.' },
+  { cat:'注文を受ける', icon:'📝', bg:'#EAF5EE', items:[
+    { ja:'鰹節抜きのご注文も承ります', en:'We also accept orders without bonito flakes.' },
+    { ja:'どんな味がお好みですか？', en:'What kind of flavors do you like?' },
+    { ja:'わさび抜きもできますよ', en:'We can make it without wasabi.' },
+    { ja:'おすすめはこちらです', en:"Here's what we recommend." },
+    { ja:'一番人気はこちらです', en:'The most popular one is this one.' },
+    { ja:'あちらの模型がビッグサイズの見本です', en:'That model over there is a big size sample.' },
   ]},
-  { cat:'\u5e2d\u30fb\u30a4\u30fc\u30c8\u30a4\u30f3\u6848\u5185', icon:'\U0001FA91', bg:'#F0FDF4', items:[
-    { ja:'\u5148\u306b\u6ce8\u6587\u3092\u6e08\u307e\u305b\u3066\u3044\u305f\u3060\u304f\u30b7\u30b9\u30c6\u30e0\u3067\u3059', en:'We ask for your order before seating you.' },
-    { ja:'\u5e2d\u304c\u8db3\u308a\u306a\u3044\u306e\u3067\u3001\u304a\u5f85\u3061\u3044\u305f\u3060\u3051\u307e\u3059\u304b', en:"There aren't enough seats, so could you please wait?" },
-    { ja:'\u304a\u5ba2\u69d8\u306b\u3088\u308b\u306e\u3067\u5f85\u3061\u6642\u9593\u306f\u308f\u304b\u308a\u307e\u305b\u3093', en:"I don't know how long the wait will be as it depends on the customer." },
-    { ja:'\u304a\u5ba2\u69d8\u6b21\u7b2c\u306a\u306e\u3067\uff08\u5e97\u5074\u306b\u306f\u5206\u304b\u308a\u307e\u305b\u3093\uff09', en:'It depends on the guests.', note:'\u30cb\u30e5\u30a2\u30f3\u30b9\uff1a\u8ab0\u304c\u6765\u308b\u304b\u6b21\u7b2c\u3067\u8aad\u3081\u306a\u3044' },
-    { ja:'\uff08\u6570\u5206\u3067\u306f\u306a\u304f\uff09\u3057\u3070\u3089\u304f\u304b\u304b\u308a\u305d\u3046\u3067\u3059', en:'It might take a while.', note:'\u30cb\u30e5\u30a2\u30f3\u30b9\uff1a\u305d\u3053\u305d\u3053\u6642\u9593\u304c\u304b\u304b\u308b\u898b\u8fbc\u307f' },
-    { ja:'\u500b\u5225\u306b\u63d0\u4f9b\u3057\u305f\u3044\u306e\u3067\u4e00\u4eba\u5206\u305a\u3064\u3054\u6ce8\u6587\u304f\u3060\u3055\u3044', en:'Please order one serving per person as we would like to serve each individually.' },
-    { ja:'\u4e00\u4eba\u5206\u305a\u3064\u3054\u6ce8\u6587\u3044\u305f\u3060\u3051\u307e\u3059\u304b', en:'Could you order individually, please?' },
-    { ja:'\u305d\u306e\u307e\u307e\u3067\u5927\u4e08\u592b\u3067\u3059\u3001\u79c1\u304c\u7247\u4ed8\u3051\u307e\u3059', en:"Please leave it. I'll take care of it." },
+  { cat:'席・イートイン案内', icon:'🪑', bg:'#F0FDF4', items:[
+    { ja:'先に注文を済ませていただくシステムです', en:'We ask for your order before seating you.' },
+    { ja:'席が足りないので、お待ちいただけますか', en:"There aren't enough seats, so could you please wait?" },
+    { ja:'お客様によるので待ち時間はわかりません', en:"I don't know how long the wait will be as it depends on the customer." },
+    { ja:'お客様次第なので（店側には分かりません）', en:'It depends on the guests.', note:'ニュアンス：誰が来るか次第で読めない' },
+    { ja:'（数分ではなく）しばらくかかりそうです', en:'It might take a while.', note:'ニュアンス：そこそこ時間がかかる見込み' },
+    { ja:'個別に提供したいので一人分ずつご注文ください', en:'Please order one serving per person as we would like to serve each individually.' },
+    { ja:'一人分ずつご注文いただけますか', en:'Could you order individually, please?' },
+    { ja:'そのままで大丈夫です、私が片付けます', en:"Please leave it. I'll take care of it." },
   ]},
-  { cat:'\u304a\u4f1a\u8a08', icon:'\U0001F4B3', bg:'#EFF6FF', items:[
-    { ja:'\u30af\u30ec\u30b8\u30c3\u30c8\u30ab\u30fc\u30c9\u306f\u3053\u3061\u3089\u306b\u5165\u308c\u3066\u304f\u3060\u3055\u3044', en:'Please insert your credit card here.' },
-    { ja:'\u6a5f\u68b0\u306b\u5b9f\u7269\u306e\u30ab\u30fc\u30c9\u3092\u5dee\u3057\u8fbc\u3093\u3067\u3044\u305f\u3060\u3051\u307e\u3059\u304b\uff1f', en:'Could you please insert your plastic card into the machine?' },
-    { ja:'\u304a\u91d1\u306f\u3053\u3061\u3089\u306b\u5165\u308c\u3066\u304f\u3060\u3055\u3044', en:'Please insert the money here.' },
+  { cat:'お会計', icon:'💳', bg:'#EFF6FF', items:[
+    { ja:'クレジットカードはこちらに入れてください', en:'Please insert your credit card here.' },
+    { ja:'機械に実物のカードを差し込んでいただけますか？', en:'Could you please insert your plastic card into the machine?' },
+    { ja:'お金はこちらに入れてください', en:'Please insert the money here.' },
   ]},
-  { cat:'\u98df\u6750\u306e\u8aac\u660e', icon:'\U0001F37D', bg:'#FAEEDA', items:[
-    { ja:'\u3053\u3093\u306b\u3083\u304f\u306e\u8aac\u660e', en:"It's a firm, jelly-like food made from a type of yam called 'konjac'.", note:'\u30b3\u30f3\u30cb\u30e3\u30af\u82ca\u304b\u3089\u4f5c\u308b\u5f3e\u529b\u306e\u3042\u308b\u30bc\u30ea\u30fc\u72b6\u306e\u98df\u3079\u7269' },
+  { cat:'食材の説明', icon:'🍽', bg:'#FAEEDA', items:[
+    { ja:'こんにゃくの説明', en:"It's a firm, jelly-like food made from a type of yam called 'konjac'.", note:'コンニャク芋から作る弾力のあるゼリー状の食べ物' },
   ]},
 ];
 
 function renderPhrasebook() {
   const c = document.getElementById('pbContent');
   c.innerHTML = '';
-  PHRASEBOOK.forEach(group => {
+  PHRASEBOOK.forEach(function(group) {
     const cat = document.createElement('div');
     cat.className = 'pb-cat';
-    let inner = `<div class="pb-cat-title"><span class="pb-icon" style="background:${group.bg}">${group.icon}</span>${group.cat}</div>`;
-    group.items.forEach(it => {
-      const safe = it.en.replace(/'/g, String.fromCharCode(39)).replace(/"/g, '&quot;');
-      inner += `<div class="pb-card"><div class="pb-ja">${it.ja}</div><div class="pb-en">${it.en}</div>` +
-        (it.note ? `<div class="pb-note">\U0001F4A1 ${it.note}</div>` : '') +
-        `<button class="pb-speak" onclick="speakText(&quot;${safe}&quot;)">\U0001F50A \u767a\u97f3\u3092\u805e\u304f</button></div>`;
+    let inner = '<div class="pb-cat-title"><span class="pb-icon" style="background:' + group.bg + '">' + group.icon + '</span>' + group.cat + '</div>';
+    group.items.forEach(function(it) {
+      const safe = it.en.replace(/"/g, '&quot;');
+      inner += '<div class="pb-card"><div class="pb-ja">' + it.ja + '</div><div class="pb-en">' + it.en + '</div>';
+      if (it.note) { inner += '<div class="pb-note">💡 ' + it.note + '</div>'; }
+      inner += '<button class="pb-speak" onclick="speakPB(this)" data-en="' + safe + '">🔊 発音を聞く</button></div>';
     });
     cat.innerHTML = inner;
     c.appendChild(cat);
   });
+}
+
+function speakPB(btn) {
+  const text = btn.getAttribute('data-en');
+  try {
+    const u = new SpeechSynthesisUtterance(text);
+    u.lang = 'en-US';
+    speechSynthesis.cancel();
+    speechSynthesis.speak(u);
+  } catch(e) {}
 }
 
 function showPhrasebook() {
@@ -786,7 +796,7 @@ async function submitAnswer() {
   "intent_ja": "intent_enの日本語訳（intent_enが空の場合は空文字）"
 }
 
-参考：この店で実際に使われる自然な言い回し（recommended_phrase_enはこれらに沿うと実用的です）:
+参考：この店で実際に使われる自然な言い回し（recommended_phrase_en はこれらに沿うと実用的です）:
 We also accept orders without bonito flakes. / What kind of flavors do you like? / We ask for your order before seating you. / Could you order individually, please? / Please insert your credit card here. / We can make it without wasabi. / It depends on the guests. / It might take a while.`;
 
   try {
